@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Academy Enrollment System</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* ===== CONTAINER ===== */
+        .app-container {
+            width: 100%;
+            max-width: 1300px;
+            min-height: 90vh;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        /* ===== VIEWS ===== */
+        .view {
+            display: none;
+            padding: 40px;
+            animation: fadeSlide 0.4s ease forwards;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== LOGIN / REGISTER VIEW ===== */
+        #authView {
+            padding: 0;
+            display: flex;
+            min-height: 90vh;
+        }
+
+        #authView.active {
+            display: flex;
+        }
+
+        .auth-left {
+            flex: 1;
+            background: linear-gradient(145deg, #4F46E5, #7C3AED);
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-left::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 50%;
+        }
+
+        .auth-left .brand {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-left .brand i {
+            margin-right: 12px;
+        }
+
+        .auth-left .tagline {
+            font-size: 18px;
+            opacity: 0.9;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+            max-width: 400px;
+        }
+
+        .auth-left .features {
+            margin-top: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-left .features li {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 15px;
+            font-weight: 400;
+            opacity: 0.92;
+            margin-bottom: 14px;
+        }
+
+        .auth-left .features li i {
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        .auth-right {
+            flex: 1;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #fff;
+        }
+
+        .auth-right h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1E1B4B;
+            margin-bottom: 6px;
+        }
+
+        .auth-right .sub {
+            color: #6B7280;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        .auth-right .form-group {
+            margin-bottom: 18px;
+        }
+
+        .auth-right .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+
+        .auth-right .form-group label i {
+            margin-right: 6px;
+            color: #4F46E5;
+            width: 18px;
+        }
+
+        .auth-right .form-group input,
+        .auth-right .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: 0.2s;
+            background: #FAFAFA;
+        }
+
+        .auth-right .form-group input:focus,
+        .auth-right .form-group select:focus {
+            outline: none;
+            border-color: #4F46E5;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        .auth-right .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: #4F46E5;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: 0.25s;
+            margin-top: 6px;
+        }
+
+        .auth-right .btn-primary:hover {
+            background: #4338CA;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .auth-right .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .auth-right .toggle-auth {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #6B7280;
+        }
+
+        .auth-right .toggle-auth a {
+            color: #4F46E5;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .auth-right .toggle-auth a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-right .role-badge {
+            display: inline-block;
+            background: #EEF2FF;
+            color: #4F46E5;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 18px;
+            align-self: flex-start;
+        }
+
+        .auth-right .error-msg {
+            color: #EF4444;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .auth-right .error-msg.show {
+            display: block;
+        }
+
+        .auth-right .success-msg {
+            color: #10B981;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .auth-right .success-msg.show {
+            display: block;
+        }
+
+        /* ===== HEADER ===== */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 24px;
+            border-bottom: 2px solid #F3F4F6;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .dashboard-header .left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .dashboard-header .left .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1E1B4B;
+        }
+
+        .dashboard-header .left .logo i {
+            color: #4F46E5;
+            margin-right: 8px;
+        }
+
+        .dashboard-header .left .user-info {
+            font-size: 14px;
+            color: #6B7280;
+            background: #F3F4F6;
+            padding: 6px 16px;
+            border-radius: 30px;
+        }
+
+        .dashboard-header .left .user-info span {
+            font-weight: 600;
+            color: #1E1B4B;
+        }
+
+        .dashboard-header .right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dashboard-header .right .btn-logout {
+            padding: 10px 24px;
+            background: #FEE2E2;
+            color: #DC2626;
+            border: none;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dashboard-header .right .btn-logout:hover {
+            background: #FECACA;
+            transform: scale(1.02);
+        }
+
+        .dashboard-header .right .btn-logout i {
+            font-size: 14px;
+        }
+
+        /* ===== USER FORM VIEW ===== */
+        .form-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1E1B4B;
+            margin-bottom: 4px;
+        }
+
+        .form-subtitle {
+            color: #6B7280;
+            font-size: 15px;
+            margin-bottom: 28px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 30px;
+        }
+
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-grid .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-grid .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-grid .form-group label i {
+            color: #4F46E5;
+            width: 18px;
+        }
+
+        .form-grid .form-group label .required {
+            color: #EF4444;
+            font-weight: 700;
+        }
+
+        .form-grid .form-group input,
+        .form-grid .form-group select {
+            padding: 12px 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: 0.2s;
+            background: #FAFAFA;
+        }
+
+        .form-grid .form-group input:focus,
+        .form-grid .form-group select:focus {
+            outline: none;
+            border-color: #4F46E5;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.08);
+        }
+
+        .form-grid .form-group .file-upload-wrapper {
+            position: relative;
+            border: 2px dashed #D1D5DB;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.25s;
+            background: #FAFAFA;
+        }
+
+        .form-grid .form-group .file-upload-wrapper:hover {
+            border-color: #4F46E5;
+            background: #F5F3FF;
+        }
+
+        .form-grid .form-group .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .form-grid .form-group .file-upload-wrapper .upload-icon {
+            font-size: 32px;
+            color: #4F46E5;
+            margin-bottom: 6px;
+        }
+
+        .form-grid .form-group .file-upload-wrapper .upload-text {
+            font-size: 14px;
+            color: #6B7280;
+        }
+
+        .form-grid .form-group .file-upload-wrapper .upload-text span {
+            color: #4F46E5;
+            font-weight: 600;
+        }
+
+        .form-grid .form-group .image-preview {
+            margin-top: 12px;
+            display: none;
+            justify-content: center;
+        }
+
+        .form-grid .form-group .image-preview img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 3px solid #4F46E5;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.15);
+        }
+
+        .form-grid .form-group .image-preview.show {
+            display: flex;
+        }
+
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .form-actions .btn-submit {
+            padding: 14px 48px;
+            background: #4F46E5;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-actions .btn-submit:hover {
+            background: #4338CA;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(79, 70, 229, 0.3);
+        }
+
+        .form-actions .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-actions .btn-reset {
+            padding: 14px 32px;
+            background: #F3F4F6;
+            color: #4B5563;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .form-actions .btn-reset:hover {
+            background: #E5E7EB;
+        }
+
+        .form-status {
+            grid-column: 1 / -1;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-weight: 500;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-status.show {
+            display: flex;
+        }
+
+        .form-status.success {
+            background: #D1FAE5;
+            color: #065F46;
+            border: 1px solid #6EE7B7;
+        }
+
+        .form-status.error {
+            background: #FEE2E2;
+            color: #991B1B;
+            border: 1px solid #FCA5A5;
+        }
+
+        /* ===== ADMIN PANEL ===== */
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .admin-stats .stat-card {
+            background: #FAFAFA;
+            padding: 18px 22px;
+            border-radius: 16px;
+            border: 1px solid #F3F4F6;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-stats .stat-card .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #fff;
+        }
+
+        .admin-stats .stat-card .stat-icon.blue {
+            background: #4F46E5;
+        }
+        .admin-stats .stat-card .stat-icon.green {
+            background: #10B981;
+        }
+        .admin-stats .stat-card .stat-icon.yellow {
+            background: #F59E0B;
+        }
+        .admin-stats .stat-card .stat-icon.red {
+            background: #EF4444;
+        }
+
+        .admin-stats .stat-card .stat-info .stat-number {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1E1B4B;
+            line-height: 1.2;
+        }
+
+        .admin-stats .stat-card .stat-info .stat-label {
+            font-size: 13px;
+            color: #6B7280;
+        }
+
+        .admin-table-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid #F3F4F6;
+            background: #FAFAFA;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-width: 800px;
+        }
+
+        .admin-table thead {
+            background: #F3F4F6;
+        }
+
+        .admin-table thead th {
+            padding: 14px 18px;
+            text-align: left;
+            font-weight: 600;
+            color: #4B5563;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .admin-table tbody tr {
+            border-bottom: 1px solid #F3F4F6;
+            transition: 0.15s;
+        }
+
+        .admin-table tbody tr:hover {
+            background: #F9FAFB;
+        }
+
+        .admin-table tbody td {
+            padding: 14px 18px;
+            vertical-align: middle;
+            color: #1F2937;
+        }
+
+        .admin-table .user-pic {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #E5E7EB;
+            background: #F3F4F6;
+        }
+
+        .admin-table .status-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .admin-table .status-badge.pending {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+        .admin-table .status-badge.accepted {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+        .admin-table .status-badge.rejected {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .admin-table .action-btns {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .admin-table .action-btns .btn-accept {
+            padding: 6px 16px;
+            background: #10B981;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .admin-table .action-btns .btn-accept:hover {
+            background: #059669;
+            transform: scale(1.03);
+        }
+
+        .admin-table .action-btns .btn-reject {
+            padding: 6px 16px;
+            background: #EF4444;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .admin-table .action-btns .btn-reject:hover {
+            background: #DC2626;
+            transform: scale(1.03);
+        }
+
+        .admin-table .action-btns .btn-accept:disabled,
+        .admin-table .action-btns .btn-reject:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .admin-empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: #6B7280;
+        }
+
+        .admin-empty i {
+            font-size: 48px;
+            color: #D1D5DB;
+            margin-bottom: 12px;
+        }
+
+        .admin-empty h3 {
+            font-size: 20px;
+            color: #1F2937;
+            margin-bottom: 4px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            #authView {
+                flex-direction: column;
+                min-height: auto;
+            }
+
+            .auth-left {
+                padding: 40px 30px;
+                min-height: 220px;
+            }
+
+            .auth-left .features {
+                display: none;
+            }
+
+            .auth-right {
+                padding: 40px 30px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid .full-width {
+                grid-column: 1;
+            }
+
+            .form-actions {
+                grid-column: 1;
+            }
+
+            .view {
+                padding: 24px;
+            }
+
+            .admin-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .app-container {
+                border-radius: 20px;
+                min-height: auto;
+            }
+
+            .view {
+                padding: 18px;
+            }
+
+            .auth-left {
+                padding: 30px 20px;
+            }
+
+            .auth-left .brand {
+                font-size: 28px;
+            }
+
+            .auth-right {
+                padding: 30px 20px;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .dashboard-header .left {
+                flex-wrap: wrap;
+            }
+
+            .dashboard-header .right {
+                justify-content: flex-start;
+            }
+
+            .form-title {
+                font-size: 22px;
+            }
+
+            .admin-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .admin-stats .stat-card {
+                padding: 14px;
+            }
+
+            .admin-stats .stat-card .stat-info .stat-number {
+                font-size: 20px;
+            }
+
+            .admin-table {
+                font-size: 12px;
+                min-width: 600px;
+            }
+
+            .admin-table thead th,
+            .admin-table tbody td {
+                padding: 10px 12px;
+            }
+
+            .form-actions .btn-submit {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .form-actions .btn-reset {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F3F4F6;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9CA3AF;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container" id="app">
+
+        <!-- ============================================================ -->
+        <!--  AUTH VIEW (Login / Register)                                  -->
+        <!-- ============================================================ -->
+        <div class="view active" id="authView">
+
+            <div class="auth-left">
+                <div class="brand">
+                    <i class="fas fa-graduation-cap"></i> EduAcademy
+                </div>
+                <div class="tagline">
+                    Enroll in the best courses &amp; build your future with industry-leading programs.
+                </div>
+                <ul class="features">
+                    <li><i class="fas fa-check"></i> 50+ Professional Courses</li>
+                    <li><i class="fas fa-check"></i> Expert Instructors</li>
+                    <li><i class="fas fa-check"></i> Flexible Learning Schedules</li>
+                    <li><i class="fas fa-check"></i> Certification Upon Completion</li>
+                </ul>
+            </div>
+
+            <div class="auth-right">
+                <!-- Login Form -->
+                <div id="loginForm">
+                    <div class="role-badge"><i class="fas fa-user"></i> Student / Admin Login</div>
+                    <h2>Welcome Back</h2>
+                    <p class="sub">Login to your account to continue</p>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Username</label>
+                        <input type="text" id="loginUsername" placeholder="Enter your username" />
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" />
+                    </div>
+
+                    <div id="loginError" class="error-msg"><i class="fas fa-exclamation-circle"></i> Invalid username or password.</div>
+                    <div id="loginSuccess" class="success-msg"><i class="fas fa-check-circle"></i> Login successful!</div>
+
+                    <button class="btn-primary" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+
+                    <div class="toggle-auth">
+                        Don't have an account? <a id="showRegister">Register here</a>
+                    </div>
+                </div>
+
+                <!-- Register Form -->
+                <div id="registerForm" style="display:none;">
+                    <div class="role-badge"><i class="fas fa-user-plus"></i> Create Account</div>
+                    <h2>Get Started</h2>
+                    <p class="sub">Join EduAcademy and start learning today</p>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Username</label>
+                        <input type="text" id="regUsername" placeholder="Choose a username" />
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="regEmail" placeholder="Enter your email" />
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="regPassword" placeholder="Create a password (min 6 chars)" />
+                    </div>
+
+                    <div id="regError" class="error-msg"><i class="fas fa-exclamation-circle"></i> Please fill all fields correctly.</div>
+                    <div id="regSuccess" class="success-msg"><i class="fas fa-check-circle"></i> Account created! Please login.</div>
+
+                    <button class="btn-primary" id="registerBtn"><i class="fas fa-user-plus"></i> Register</button>
+
+                    <div class="toggle-auth">
+                        Already have an account? <a id="showLogin">Login here</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!--  USER DASHBOARD VIEW (Enrollment Form)                        -->
+        <!-- ============================================================ -->
+        <div class="view" id="userView">
+
+            <div class="dashboard-header">
+                <div class="left">
+                    <div class="logo"><i class="fas fa-graduation-cap"></i> EduAcademy</div>
+                    <div class="user-info"><i class="fas fa-user-circle"></i> Welcome, <span id="userNameDisplay">User</span></div>
+                </div>
+                <div class="right">
+                    <button class="btn-logout" id="userLogout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+
+            <div class="form-title"><i class="fas fa-pen-to-square" style="color:#4F46E5;margin-right:10px;"></i> Enrollment Application</div>
+            <p class="form-subtitle">Fill out the form below to apply for admission. All fields are required.</p>
+
+            <form id="enrollmentForm" class="form-grid">
+
+                <!-- Session Name -->
+                <div class="form-group">
+                    <label><i class="fas fa-calendar"></i> Session <span class="required">*</span></label>
+                    <select id="sessionName" required>
+                        <option value="">Select Session</option>
+                        <option value="Spring 2026">Spring 2026</option>
+                        <option value="Summer 2026">Summer 2026</option>
+                        <option value="Fall 2026">Fall 2026</option>
+                        <option value="Winter 2026">Winter 2026</option>
+                    </select>
+                </div>
+
+                <!-- Last Name -->
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Last Name <span class="required">*</span></label>
+                    <input type="text" id="lastName" placeholder="e.g. Khan" required />
+                </div>
+
+                <!-- Father Name -->
+                <div class="form-group">
+                    <label><i class="fas fa-user-tie"></i> Father Name <span class="required">*</span></label>
+                    <input type="text" id="fatherName" placeholder="e.g. Ahmad Khan" required />
+                </div>
+
+                <!-- Mobile Number -->
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Mobile Number <span class="required">*</span></label>
+                    <input type="tel" id="mobileNumber" placeholder="e.g. 03XX-XXXXXXX" required />
+                </div>
+
+                <!-- CNIC Number -->
+                <div class="form-group">
+                    <label><i class="fas fa-id-card"></i> CNIC Number <span class="required">*</span></label>
+                    <input type="text" id="cnicNumber" placeholder="e.g. 12345-6789012-3" required />
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email <span class="required">*</span></label>
+                    <input type="email" id="emailAddress" placeholder="you@example.com" required />
+                </div>
+
+                <!-- Education Last -->
+                <div class="form-group">
+                    <label><i class="fas fa-graduation-cap"></i> Last Education <span class="required">*</span></label>
+                    <select id="educationLast" required>
+                        <option value="">Select Education</option>
+                        <option value="Matric">Matric</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Bachelor">Bachelor</option>
+                        <option value="Master">Master</option>
+                        <option value="PhD">PhD</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Gender -->
+                <div class="form-group">
+                    <label><i class="fas fa-venus-mars"></i> Gender <span class="required">*</span></label>
+                    <select id="genderSelect" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Course Selection -->
+                <div class="form-group">
+                    <label><i class="fas fa-laptop-code"></i> Select Course <span class="required">*</span></label>
+                    <select id="courseSelect" required>
+                        <option value="">Choose a course</option>
+                        <option value="Computer Science - $500">Computer Science — $500</option>
+                        <option value="Software Engineering - $600">Software Engineering — $600</option>
+                        <option value="Web Development - $400">Web Development — $400</option>
+                        <option value="Data Science - $700">Data Science — $700</option>
+                        <option value="Cybersecurity - $550">Cybersecurity — $550</option>
+                        <option value="Cloud Computing - $650">Cloud Computing — $650</option>
+                        <option value="AI & Machine Learning - $800">AI &amp; Machine Learning — $800</option>
+                    </select>
+                </div>
+
+                <!-- User Picture Upload -->
+                <div class="form-group full-width">
+                    <label><i class="fas fa-image"></i> Profile Picture <span class="required">*</span></label>
+                    <div class="file-upload-wrapper" id="fileUploadWrapper">
+                        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                        <div class="upload-text">Drag &amp; drop or <span>browse</span> to upload<br /><small style="color:#9CA3AF;">JPG, PNG, GIF (max 5MB)</small></div>
+                        <input type="file" id="userPicture" accept="image/*" required />
+                    </div>
+                    <div class="image-preview" id="imagePreview">
+                        <img id="previewImg" src="#" alt="Preview" />
+                    </div>
+                </div>
+
+                <!-- Form Status Messages -->
+                <div class="form-status" id="formStatus"></div>
+
+                <!-- Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit" id="submitBtn"><i class="fas fa-paper-plane"></i> Apply Now</button>
+                    <button type="reset" class="btn-reset"><i class="fas fa-undo"></i> Reset</button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- ============================================================ -->
+        <!--  ADMIN PANEL VIEW                                              -->
+        <!-- ============================================================ -->
+        <div class="view" id="adminView">
+
+            <div class="dashboard-header">
+                <div class="left">
+                    <div class="logo"><i class="fas fa-graduation-cap"></i> EduAcademy</div>
+                    <div class="user-info"><i class="fas fa-user-shield"></i> Admin Panel — <span id="adminNameDisplay">Admin</span></div>
+                </div>
+                <div class="right">
+                    <button class="btn-logout" id="adminLogout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+                <h2 style="font-size:24px;font-weight:700;color:#1E1B4B;"><i class="fas fa-users" style="color:#4F46E5;margin-right:10px;"></i> Applications</h2>
+                <span style="font-size:14px;color:#6B7280;background:#F3F4F6;padding:6px 18px;border-radius:30px;">
+                    <i class="fas fa-sync-alt" style="margin-right:6px;"></i> Auto-refreshes
+                </span>
+            </div>
+
+            <!-- Stats -->
+            <div class="admin-stats" id="statsContainer">
+                <div class="stat-card">
+                    <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+                    <div class="stat-info"><div class="stat-number" id="statTotal">0</div><div class="stat-label">Total Applications</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon yellow"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info"><div class="stat-number" id="statPending">0</div><div class="stat-label">Pending</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-info"><div class="stat-number" id="statAccepted">0</div><div class="stat-label">Accepted</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon red"><i class="fas fa-times-circle"></i></div>
+                    <div class="stat-info"><div class="stat-number" id="statRejected">0</div><div class="stat-label">Rejected</div></div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Picture</th>
+                            <th>Student</th>
+                            <th>Session</th>
+                            <th>Course</th>
+                            <th>Contact</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody">
+                        <!-- Rows inserted by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="adminEmpty" class="admin-empty" style="display:none;">
+                <i class="fas fa-inbox"></i>
+                <h3>No Applications Yet</h3>
+                <p>When students apply, their applications will appear here.</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!--  JAVASCRIPT                                                    -->
+    <!-- ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // =============================================================
+            //  DATA LAYER
+            // =============================================================
+
+            const DB_KEY = 'academy_app_data';
+
+            function getDB() {
+                try {
+                    const raw = localStorage.getItem(DB_KEY);
+                    if (raw) return JSON.parse(raw);
+                } catch (_) { /* ignore */ }
+                return { users: [], applications: [] };
+            }
+
+            function saveDB(db) {
+                localStorage.setItem(DB_KEY, JSON.stringify(db));
+            }
+
+            // Seed default admin if missing
+            function seedAdmin() {
+                const db = getDB();
+                const adminExists = db.users.some(u => u.username === 'admin');
+                if (!adminExists) {
+                    db.users.push({
+                        id: 'admin_' + Date.now(),
+                        username: 'admin',
+                        password: 'admin123',
+                        email: 'admin@academy.com',
+                        role: 'admin'
+                    });
+                    saveDB(db);
+                }
+            }
+            seedAdmin();
+
+            // =============================================================
+            //  STATE
+            // =============================================================
+
+            let currentUser = null; // { username, role }
+
+            // =============================================================
+            //  DOM REFS
+            // =============================================================
+
+            const $ = id => document.getElementById(id);
+
+            const authView = $('authView');
+            const userView = $('userView');
+            const adminView = $('adminView');
+
+            // Auth
+            const loginForm = $('loginForm');
+            const registerForm = $('registerForm');
+            const loginUsername = $('loginUsername');
+            const loginPassword = $('loginPassword');
+            const loginBtn = $('loginBtn');
+            const loginError = $('loginError');
+            const loginSuccess = $('loginSuccess');
+            const showRegisterLink = $('showRegister');
+            const showLoginLink = $('showLogin');
+
+            const regUsername = $('regUsername');
+            const regEmail = $('regEmail');
+            const regPassword = $('regPassword');
+            const registerBtn = $('registerBtn');
+            const regError = $('regError');
+            const regSuccess = $('regSuccess');
+
+            // User
+            const userNameDisplay = $('userNameDisplay');
+            const userLogout = $('userLogout');
+
+            const enrollmentForm = $('enrollmentForm');
+            const sessionName = $('sessionName');
+            const lastName = $('lastName');
+            const fatherName = $('fatherName');
+            const mobileNumber = $('mobileNumber');
+            const cnicNumber = $('cnicNumber');
+            const emailAddress = $('emailAddress');
+            const educationLast = $('educationLast');
+            const genderSelect = $('genderSelect');
+            const courseSelect = $('courseSelect');
+            const userPicture = $('userPicture');
+            const imagePreview = $('imagePreview');
+            const previewImg = $('previewImg');
+            const submitBtn = $('submitBtn');
+            const formStatus = $('formStatus');
+
+            // Admin
+            const adminNameDisplay = $('adminNameDisplay');
+            const adminLogout = $('adminLogout');
+            const adminTableBody = $('adminTableBody');
+            const adminEmpty = $('adminEmpty');
+            const statTotal = $('statTotal');
+            const statPending = $('statPending');
+            const statAccepted = $('statAccepted');
+            const statRejected = $('statRejected');
+
+            // =============================================================
+            //  VIEW MANAGEMENT
+            // =============================================================
+
+            function showView(viewId) {
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                const target = document.getElementById(viewId);
+                if (target) target.classList.add('active');
+            }
+
+            function goToAuth() {
+                currentUser = null;
+                showView('authView');
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                loginError.classList.remove('show');
+                loginSuccess.classList.remove('show');
+                loginUsername.value = '';
+                loginPassword.value = '';
+                // Clear reg fields
+                regUsername.value = '';
+                regEmail.value = '';
+                regPassword.value = '';
+                regError.classList.remove('show');
+                regSuccess.classList.remove('show');
+            }
+
+            function goToUserDashboard(username) {
+                currentUser = { username, role: 'user' };
+                userNameDisplay.textContent = username;
+                showView('userView');
+                resetForm();
+                formStatus.className = 'form-status';
+                formStatus.textContent = '';
+            }
+
+            function goToAdminDashboard() {
+                currentUser = { username: 'admin', role: 'admin' };
+                adminNameDisplay.textContent = 'Admin';
+                showView('adminView');
+                renderAdminPanel();
+            }
+
+            // =============================================================
+            //  AUTH HANDLERS
+            // =============================================================
+
+            function handleLogin() {
+                const username = loginUsername.value.trim();
+                const password = loginPassword.value.trim();
+
+                if (!username || !password) {
+                    loginError.textContent = 'Please enter both username and password.';
+                    loginError.classList.add('show');
+                    loginSuccess.classList.remove('show');
+                    return;
+                }
+
+                const db = getDB();
+                const user = db.users.find(u => u.username === username && u.password === password);
+
+                if (!user) {
+                    loginError.textContent = 'Invalid username or password. Please try again.';
+                    loginError.classList.add('show');
+                    loginSuccess.classList.remove('show');
+                    return;
+                }
+
+                loginError.classList.remove('show');
+                loginSuccess.textContent = 'Login successful! Redirecting...';
+                loginSuccess.classList.add('show');
+
+                setTimeout(() => {
+                    if (user.role === 'admin' || username === 'admin') {
+                        goToAdminDashboard();
+                    } else {
+                        goToUserDashboard(username);
+                    }
+                }, 400);
+            }
+
+            function handleRegister() {
+                const username = regUsername.value.trim();
+                const email = regEmail.value.trim();
+                const password = regPassword.value.trim();
+
+                if (!username || !email || !password) {
+                    regError.textContent = 'All fields are required.';
+                    regError.classList.add('show');
+                    regSuccess.classList.remove('show');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    regError.textContent = 'Password must be at least 6 characters.';
+                    regError.classList.add('show');
+                    regSuccess.classList.remove('show');
+                    return;
+                }
+
+                if (username === 'admin') {
+                    regError.textContent = 'Username "admin" is reserved. Please choose another.';
+                    regError.classList.add('show');
+                    regSuccess.classList.remove('show');
+                    return;
+                }
+
+                const db = getDB();
+                if (db.users.some(u => u.username === username)) {
+                    regError.textContent = 'Username already taken. Please choose another.';
+                    regError.classList.add('show');
+                    regSuccess.classList.remove('show');
+                    return;
+                }
+
+                if (db.users.some(u => u.email === email)) {
+                    regError.textContent = 'Email already registered. Please login.';
+                    regError.classList.add('show');
+                    regSuccess.classList.remove('show');
+                    return;
+                }
+
+                // Create user
+                db.users.push({
+                    id: 'user_' + Date.now(),
+                    username,
+                    email,
+                    password,
+                    role: 'user'
+                });
+                saveDB(db);
+
+                regError.classList.remove('show');
+                regSuccess.textContent = 'Account created! Please login.';
+                regSuccess.classList.add('show');
+
+                // Switch to login after a moment
+                setTimeout(() => {
+                    loginForm.style.display = 'block';
+                    registerForm.style.display = 'none';
+                    loginUsername.value = username;
+                    loginPassword.value = '';
+                    regSuccess.classList.remove('show');
+                    loginError.classList.remove('show');
+                    loginSuccess.classList.remove('show');
+                }, 1200);
+            }
+
+            // =============================================================
+            //  ENROLLMENT FORM
+            // =============================================================
+
+            function resetForm() {
+                enrollmentForm.reset();
+                imagePreview.classList.remove('show');
+                previewImg.src = '#';
+                formStatus.className = 'form-status';
+                formStatus.textContent = '';
+                submitBtn.disabled = false;
+                // Reset file input
+                userPicture.value = '';
+            }
+
+            // Image preview
+            userPicture.addEventListener('change', function(e) {
+                const file = this.files[0];
+                if (!file) {
+                    imagePreview.classList.remove('show');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    previewImg.src = ev.target.result;
+                    imagePreview.classList.add('show');
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Drag & drop visual
+            const uploadWrapper = document.getElementById('fileUploadWrapper');
+            uploadWrapper.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadWrapper.style.borderColor = '#4F46E5';
+                uploadWrapper.style.background = '#EEF2FF';
+            });
+            uploadWrapper.addEventListener('dragleave', () => {
+                uploadWrapper.style.borderColor = '#D1D5DB';
+                uploadWrapper.style.background = '#FAFAFA';
+            });
+            uploadWrapper.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadWrapper.style.borderColor = '#D1D5DB';
+                uploadWrapper.style.background = '#FAFAFA';
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    userPicture.files = files;
+                    userPicture.dispatchEvent(new Event('change'));
+                }
+            });
+
+            // Form submit
+            enrollmentForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Collect data
+                const session = sessionName.value;
+                const lName = lastName.value.trim();
+                const fName = fatherName.value.trim();
+                const mobile = mobileNumber.value.trim();
+                const cnic = cnicNumber.value.trim();
+                const email = emailAddress.value.trim();
+                const edu = educationLast.value;
+                const gender = genderSelect.value;
+                const course = courseSelect.value;
+                const pictureFile = userPicture.files[0];
+
+                // Validate
+                if (!session || !lName || !fName || !mobile || !cnic || !email || !edu || !gender || !course) {
+                    showFormStatus('Please fill in all required fields.', 'error');
+                    return;
+                }
+
+                if (!pictureFile) {
+                    showFormStatus('Please upload a profile picture.', 'error');
+                    return;
+                }
+
+                // Read image as base64
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const imageData = ev.target.result;
+
+                    // Save application
+                    const db = getDB();
+                    const app = {
+                        id: 'app_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+                        userId: currentUser ? currentUser.username : 'anonymous',
+                        username: currentUser ? currentUser.username : 'anonymous',
+                        sessionName: session,
+                        lastName: lName,
+                        fatherName: fName,
+                        mobileNumber: mobile,
+                        cnicNumber: cnic,
+                        email: email,
+                        educationLast: edu,
+                        gender: gender,
+                        course: course,
+                        picture: imageData,
+                        status: 'pending', // pending | accepted | rejected
+                        appliedDate: new Date().toISOString()
+                    };
+                    db.applications.push(app);
+                    saveDB(db);
+
+                    showFormStatus('✅ Application submitted successfully! It is now pending admin review.', 'success');
+                    submitBtn.disabled = true;
+
+                    // Reset form after 2s
+                    setTimeout(() => {
+                        resetForm();
+                        submitBtn.disabled = false;
+                    }, 2500);
+                };
+                reader.readAsDataURL(pictureFile);
+            });
+
+            function showFormStatus(msg, type) {
+                formStatus.textContent = msg;
+                formStatus.className = 'form-status show ' + type;
+            }
+
+            // Reset button
+            enrollmentForm.querySelector('.btn-reset').addEventListener('click', function(e) {
+                e.preventDefault();
+                resetForm();
+            });
+
+            // =============================================================
+            //  ADMIN PANEL
+            // =============================================================
+
+            function renderAdminPanel() {
+                const db = getDB();
+                const apps = db.applications;
+
+                // Stats
+                const total = apps.length;
+                const pending = apps.filter(a => a.status === 'pending').length;
+                const accepted = apps.filter(a => a.status === 'accepted').length;
+                const rejected = apps.filter(a => a.status === 'rejected').length;
+
+                statTotal.textContent = total;
+                statPending.textContent = pending;
+                statAccepted.textContent = accepted;
+                statRejected.textContent = rejected;
+
+                // Table
+                const tbody = adminTableBody;
+                tbody.innerHTML = '';
+
+                if (apps.length === 0) {
+                    adminEmpty.style.display = 'block';
+                    return;
+                }
+                adminEmpty.style.display = 'none';
+
+                // Show newest first
+                const sorted = [...apps].reverse();
+
+                sorted.forEach((app, idx) => {
+                    const tr = document.createElement('tr');
+
+                    // # (show real index from original order)
+                    const numTd = document.createElement('td');
+                    numTd.textContent = idx + 1;
+                    tr.appendChild(numTd);
+
+                    // Picture
+                    const picTd = document.createElement('td');
+                    const img = document.createElement('img');
+                    img.className = 'user-pic';
+                    img.src = app.picture || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 42 42"%3E%3Crect width="42" height="42" fill="%23E5E7EB"/%3E%3Ctext x="21" y="26" font-size="16" text-anchor="middle" fill="%239CA3AF"%3E%3F%3C/text%3E%3C/svg%3E';
+                    img.alt = 'User';
+                    picTd.appendChild(img);
+                    tr.appendChild(picTd);
+
+                    // Student name
+                    const nameTd = document.createElement('td');
+                    nameTd.innerHTML = `<strong>${app.lastName}</strong><br/><span style="font-size:12px;color:#6B7280;">${app.username || 'N/A'}</span>`;
+                    tr.appendChild(nameTd);
+
+                    // Session
+                    const sesTd = document.createElement('td');
+                    sesTd.textContent = app.sessionName || '—';
+                    tr.appendChild(sesTd);
+
+                    // Course
+                    const courseTd = document.createElement('td');
+                    courseTd.textContent = app.course || '—';
+                    tr.appendChild(courseTd);
+
+                    // Contact (mobile/email)
+                    const contactTd = document.createElement('td');
+                    contactTd.innerHTML = `<div style="font-size:13px;">${app.mobileNumber || '—'}</div><div style="font-size:12px;color:#6B7280;">${app.email || ''}</div>`;
+                    tr.appendChild(contactTd);
+
+                    // Status badge
+                    const statusTd = document.createElement('td');
+                    const badge = document.createElement('span');
+                    badge.className = `status-badge ${app.status}`;
+                    badge.textContent = app.status.charAt(0).toUpperCase() + app.status.slice(1);
+                    statusTd.appendChild(badge);
+                    tr.appendChild(statusTd);
+
+                    // Actions
+                    const actionTd = document.createElement('td');
+                    const btnWrap = document.createElement('div');
+                    btnWrap.className = 'action-btns';
+
+                    const acceptBtn = document.createElement('button');
+                    acceptBtn.className = 'btn-accept';
+                    acceptBtn.innerHTML = '<i class="fas fa-check"></i> Accept';
+                    acceptBtn.disabled = app.status !== 'pending';
+
+                    const rejectBtn = document.createElement('button');
+                    rejectBtn.className = 'btn-reject';
+                    rejectBtn.innerHTML = '<i class="fas fa-times"></i> Reject';
+                    rejectBtn.disabled = app.status !== 'pending';
+
+                    acceptBtn.addEventListener('click', function() {
+                        updateAppStatus(app.id, 'accepted');
+                    });
+
+                    rejectBtn.addEventListener('click', function() {
+                        updateAppStatus(app.id, 'rejected');
+                    });
+
+                    btnWrap.appendChild(acceptBtn);
+                    btnWrap.appendChild(rejectBtn);
+                    actionTd.appendChild(btnWrap);
+                    tr.appendChild(actionTd);
+
+                    tbody.appendChild(tr);
+                });
+            }
+
+            function updateAppStatus(appId, newStatus) {
+                const db = getDB();
+                const app = db.applications.find(a => a.id === appId);
+                if (!app) return;
+                if (app.status !== 'pending') return; // can't change after action
+                app.status = newStatus;
+                saveDB(db);
+                renderAdminPanel(); // re-render
+            }
+
+            // =============================================================
+            //  AUTO-REFRESH FOR ADMIN (every 5s)
+            // =============================================================
+
+            let adminRefreshInterval = null;
+
+            function startAdminRefresh() {
+                if (adminRefreshInterval) clearInterval(adminRefreshInterval);
+                adminRefreshInterval = setInterval(() => {
+                    if (document.getElementById('adminView').classList.contains('active')) {
+                        renderAdminPanel();
+                    }
+                }, 5000);
+            }
+
+            function stopAdminRefresh() {
+                if (adminRefreshInterval) {
+                    clearInterval(adminRefreshInterval);
+                    adminRefreshInterval = null;
+                }
+            }
+
+            // =============================================================
+            //  LOGOUT
+            // =============================================================
+
+            function logout() {
+                stopAdminRefresh();
+                currentUser = null;
+                goToAuth();
+            }
+
+            userLogout.addEventListener('click', logout);
+            adminLogout.addEventListener('click', logout);
+
+            // =============================================================
+            //  AUTH UI TOGGLES
+            // =============================================================
+
+            showRegisterLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                loginError.classList.remove('show');
+                loginSuccess.classList.remove('show');
+                regError.classList.remove('show');
+                regSuccess.classList.remove('show');
+            });
+
+            showLoginLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                regError.classList.remove('show');
+                regSuccess.classList.remove('show');
+                loginError.classList.remove('show');
+                loginSuccess.classList.remove('show');
+            });
+
+            // =============================================================
+            //  EVENT BINDINGS
+            // =============================================================
+
+            loginBtn.addEventListener('click', handleLogin);
+
+            loginUsername.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleLogin(); });
+            loginPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleLogin(); });
+
+            registerBtn.addEventListener('click', handleRegister);
+
+            regUsername.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleRegister(); });
+            regEmail.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleRegister(); });
+            regPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleRegister(); });
+
+            // =============================================================
+            //  INIT – show auth by default
+            // =============================================================
+
+            goToAuth();
+
+            // If admin is already logged in from previous session? We don't persist sessions for security.
+            // User must login each time.
+
+            console.log('🏫 EduAcademy Enrollment System loaded.');
+            console.log('🔑 Default admin: username="admin" password="admin123"');
+
+        })();
+    </script>
+
+</body>
+</html>
